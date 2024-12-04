@@ -31,3 +31,6 @@ def home(request):
     #     'banner_image_url': banner_image_url
     # }
 
+def login(request):
+
+    return render(request, 'login.html')
