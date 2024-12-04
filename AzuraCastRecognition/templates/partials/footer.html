@@ -1,0 +1,11 @@
+{% load static %}
+<!-- jQuery, Bootstrap, jQuery plugins and Custom JS code -->
+
+<script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
+<script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+
+<!-- Load and execute javascript code used only in this page -->
+<script src="{% static 'js/pages/readyDashboard.js' %}"></script>
+<script>$(function(){ ReadyDashboard.init(); });</script>
