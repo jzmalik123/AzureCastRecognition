@@ -1,4 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse
+from .services.azuracast_client import AzuraCastClient
+from .services.music_info_client import MusicInfoClient
+
+from .services.music_brainz_client import MusicBrainzClient
 
 # Create your views here.
 def home(request):
@@ -34,3 +38,47 @@ def home(request):
 def login(request):
 
     return render(request, 'login.html')
+
+def automatic_detection(request):
+    now_playing = AzuraCastClient().now_playing()
+    song_name = now_playing['title']
+    artist_name = now_playing['artist']
+
+    music_client = MusicInfoClient()
+    artist_details = music_client.get_artist_data(artist_name)
+    artist_details = artist_details['lastfm'] or artist_details['wikipedia'] or artist_name
+
+    song_details = music_client.get_song_data(artist_name, song_name)
+    song_details = song_details['lastfm'] or song_name
+
+    band_details = music_client.get_band_data(artist_name)
+
+    context = {
+        "song_details" : song_details,
+        "artist_details" : artist_details,
+        "band_details" : band_details
+    }
+    return ""
+
+
+def manual_detection(request):
+    now_playing = AzuraCastClient().now_playing()
+    song_name = now_playing['title']
+    artist_name = now_playing['artist']
+
+    music_client = MusicInfoClient()
+    artist_details = music_client.get_artist_data(artist_name)
+    artist_details = artist_details['lastfm'] or artist_details['wikipedia'] or artist_name
+
+    song_details = music_client.get_song_data(artist_name, song_name)
+    song_details = song_details['lastfm'] or song_name
+
+    band_details = music_client.get_band_data(artist_name)['open_ai']
+
+    context = {
+        "song_details": song_details,
+        "artist_details": artist_details,
+        "band_details": band_details
+    }
+
+    return render(request, 'manual_detection.html', context)

@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html><!DOCTYPE html>
 <!--[if IE 9]>         <html class="no-js lt-ie10" lang="en"> <![endif]-->
 <!--[if gt IE 9]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
     {% include 'partials/head.html' %}
@@ -106,30 +115,35 @@
                         <div class="row">
                             <!-- Simple Stats Widgets -->
                             <div class="col-sm-6 col-lg-6">
-                                <a href="{% url 'automatic_detection' %}" class="widget">
-                                    <div class="widget-content widget-content-mini text-right clearfix">
-                                        <div class="widget-icon pull-left themed-background">
-                                            <i class="gi gi-cardio text-light-op"></i>
+                                <form action="page_forms_components.html" method="post" enctype="multipart/form-data" class="form-horizontal form-bordered" onsubmit="return false;">
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label"
+                                               for="example-textarea-input">Song Details</label>
+                                        <div class="col-md-9">
+                                            <textarea id="example-textarea-input" name="example-textarea-input"
+                                                          rows="7" class="form-control" placeholder="Description..">{{ song_details }}</textarea>
                                         </div>
-                                        <h2 class="h3">
-                                            Automatic Detection
-                                        </h2>
-                                        <span class="text-muted">This will automatically post tweet</span>
                                     </div>
-                                </a>
-                            </div>
-                            <div class="col-sm-6 col-lg-6">
-                                <a href="{% url 'manual_detection' %}" class="widget">
-                                    <div class="widget-content widget-content-mini text-right clearfix">
-                                        <div class="widget-icon pull-left themed-background-success">
-                                            <i class="gi gi-user text-light-op"></i>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label"
+                                               for="example-textarea-input">Artist Details</label>
+                                        <div class="col-md-9">
+                                            <textarea id="example-textarea-input" name="example-textarea-input"
+                                                          rows="7" class="form-control" placeholder="Description..">{{ artist_details }}</textarea>
                                         </div>
-                                        <h2 class="widget-heading h3 text-success">
-                                            Manual Detection
-                                        </h2>
-                                        <span class="text-muted">This will show data</span>
                                     </div>
-                                </a>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label"
+                                               for="example-textarea-input">Band Details</label>
+                                        <div class="col-md-9">
+                                            <textarea id="example-textarea-input" name="example-textarea-input"
+                                                          rows="7" class="form-control" placeholder="Description..">{{ band_details }}</textarea>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
 
                             <!-- END Simple Stats Widgets -->

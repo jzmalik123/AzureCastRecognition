@@ -124,4 +124,3 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AZURACAST_API_BASE_URL = "https://demo.azuracast.com/api/"
