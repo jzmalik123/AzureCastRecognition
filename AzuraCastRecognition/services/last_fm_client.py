@@ -2,9 +2,10 @@ import requests
 
 class LastFmClient:
     BASE_URL = "http://ws.audioscrobbler.com/2.0/"
+    API_KEY = '30e3d45ef05b0d5aca474922f9c3cc12'
 
-    def __init__(self, api_key):
-        self.api_key = api_key
+    def __init__(self):
+        self.api_key = self.API_KEY
 
     def get_artist_info(self, artist_name):
         params = {

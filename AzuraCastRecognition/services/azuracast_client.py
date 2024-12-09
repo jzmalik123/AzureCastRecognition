@@ -1,14 +1,16 @@
 import requests
 
 class AzuraCastClient:
-    def __init__(self, base_url, api_key):
+
+    BASE_URL = "https://radioislanegra.org/api/"
+
+    def __init__(self, api_key=''):
         """
         Initialize the AzuraCastClient.
 
-        :param base_url: Base URL of the AzuraCast instance (e.g., 'http://your-azuracast-url.com/api')
         :param api_key: API key for authenticating requests.
         """
-        self.base_url = base_url.rstrip('/')
+        self.base_url = self.BASE_URL.rstrip('/')
         self.headers = {
             'Authorization': f'Bearer {api_key}',  # Optional Bearer token
             'X-API-Key': api_key,                 # Add X-API-Key header
@@ -61,4 +63,4 @@ class AzuraCastClient:
                 "remaining": now_playing.get('remaining', 0),
                 "playlist": now_playing.get('playlist', '')
             })
-        return parsed_response
+        return parsed_response[0]

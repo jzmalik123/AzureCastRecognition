@@ -34,7 +34,7 @@ class WikipediaClient:
             pages = data.get("query", {}).get("pages", {})
             for page_id, page_info in pages.items():
                 if page_id != "-1":  # "-1" means no page found
-                    return page_info.get("extract", False)
-            return False
+                    return page_info.get("extract", '')
+            return None
         except requests.RequestException as e:
-            return f"Error: {e}"
+            return None
