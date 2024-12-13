@@ -109,7 +109,7 @@
                         <div class="row">
                             <!-- Simple Stats Widgets -->
                             <div class="col-sm-6 col-lg-6">
-                                <a href="{% url 'automatic_detection' %}" class="widget" onclick="enablePageLoader()">
+                                <a href="{% url 'preview_tweet' type='automatic' %}" class="widget" onclick="enablePageLoader()">
                                     <div class="widget-content widget-content-mini text-right clearfix">
                                         <div class="widget-icon pull-left themed-background">
                                             <i class="gi gi-cardio text-light-op"></i>
@@ -122,7 +122,7 @@
                                 </a>
                             </div>
                             <div class="col-sm-6 col-lg-6">
-                                <a href="{% url 'manual_detection' %}" class="widget">
+                                <a href="{% url 'manual_detection' %}" class="widget" onclick="enablePageLoader()">
                                     <div class="widget-content widget-content-mini text-right clearfix">
                                         <div class="widget-icon pull-left themed-background-success">
                                             <i class="gi gi-user text-light-op"></i>

@@ -112,33 +112,56 @@
                     <!-- Page content -->
                     <div id="page-content">
                         <!-- First Row -->
-                        <!-- Blockquotes -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="alert alert-success alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p>Your tweet has been posted successfully</p>
-                                </div>
-                                <!-- Blockquote Left Block -->
-                                <div class="block full">
-                                    <!-- Blockquote Left Title -->
-                                    <div class="block-title">
-                                        <h4>Edit Tweet</h4>
-                                    </div>
-                                    <!-- END Blockquote Left Title -->
+                        <!-- CKEditor Block -->
+                        <div class="block">
 
-                                    <!-- Blockquote Left Content -->
-                                    <div class="clearfix">
-                                        {{ embed_html|safe }}
-                                    </div>
-                                    <!-- END Blockquote Left Content -->
+                            <!-- CKEditor Content -->
+                            <form action="/post_tweet" method="post" class="form-horizontal form-bordered" ><!-- Hidden input to store the content -->
+                                <input type="hidden" name="tweet-field" id="tweet-field">
+                                <!-- CKEditor, you just need to include the plugin (see at the bottom of this page) and add the class 'ckeditor' to your textarea -->
+                                <!-- More info can be found at http://ckeditor.com -->
+                                {% csrf_token %}
+                                <fieldset>
+                                    <legend><i class="fa fa-angle-right"></i> Preview Tweet</legend>
+                                    <div class="form-group">
+                                        <div class="col-xs-12">
+                                            <div id="inplace-ckeditor" contenteditable="true">
+                                                <!-- Blockquotes -->
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <!-- Blockquote Left Block -->
+                                                        <div class="block full">
+                                                            <!-- Blockquote Left Title -->
+                                                            <div class="block-title">
+                                                                <h4>Edit Tweet</h4>
+                                                            </div>
+                                                            <!-- END Blockquote Left Title -->
 
-                                    <a href="{{ tweet_url }}" class="btn btn-primary"><i class="fa fa-twitter"></i> View Now</a>
+                                                            <!-- Blockquote Left Content -->
+                                                            <div class="clearfix">
+                                                                <blockquote class="pull-left">
+                                                                    <p id="tweet-content">{{ summarized_tweet }}</p>
+                                                                </blockquote>
+                                                            </div>
+                                                            <!-- END Blockquote Left Content -->
+                                                        </div>
+                                                        <!-- END Blockquote Left Block -->
+                                                    </div>
+                                                </div>
+                                                <!-- END Blockquotes -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="form-group form-actions">
+                                    <div class="col-xs-12">
+                                        <button type="submit" class="btn btn-effect-ripple btn-primary">Submit</button>
+                                    </div>
                                 </div>
-                                <!-- END Blockquote Left Block -->
-                            </div>
+                            </form>
+                            <!-- END CKEditor Content -->
                         </div>
-                        <!-- END Blockquotes -->
+                        <!-- END CKEditor Block -->
                         <!-- END First Row -->
 
                     </div>
@@ -152,5 +175,17 @@
 
         {% include 'partials/footer.html' %}
     </body>
+    <!-- ckeditor.js, load it only in the page you would like to use CKEditor (it's a heavy plugin to include it with the others!) -->
+    <script src="js/plugins/ckeditor/ckeditor.js"></script>
 
+    <!-- Load and execute javascript code used only in this page -->
+    <script src="js/pages/formsComponents.js"></script>
+    <script>$(function(){ FormsComponents.init(); });</script>
+    <script>
+        // Copy the content of #inplace-ckeditor to the hidden input on form submission
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const editorContent = document.getElementById('tweet-content').innerHTML;
+            document.getElementById('tweet-field').value = editorContent;
+        });
+    </script>
 </html>

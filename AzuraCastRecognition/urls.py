@@ -23,8 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('login', views.login, name='login'),
-    path('automatic_detection', views.automatic_detection, name='automatic_detection'),
     path('manual_detection', views.manual_detection, name='manual_detection'),
     path('auth/', include('social_django.urls', namespace='social')),
     path('accounts/', include('allauth.urls')),
+    path("preview_tweet/<str:type>", views.preview_tweet, name="preview_tweet"),
+    path("post_tweet", views.post_tweet, name="post_tweet")
 ]
