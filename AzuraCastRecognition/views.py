@@ -27,10 +27,10 @@ def automatic_detection(request):
 
     music_client = MusicInfoClient()
     artist_details = music_client.get_artist_data(artist_name)
-    artist_details = artist_details['lastfm'] or artist_details['wikipedia'] or artist_name
+    artist_details = artist_details['lastfm'] or artist_details['wikipedia'] or artist_details['openai'] or artist_name
 
     song_details = music_client.get_song_data(artist_name, song_name)
-    song_details = song_details['lastfm'] or song_name
+    song_details = song_details['lastfm'] or song_details['openai'] or song_name
 
     band_details = music_client.get_band_data(artist_name)
 
@@ -53,10 +53,10 @@ def manual_detection(request):
 
         music_client = MusicInfoClient()
         artist_details = music_client.get_artist_data(artist_name)
-        artist_details = artist_details['lastfm'] or artist_details['wikipedia'] or artist_name
+        artist_details = artist_details['lastfm'] or artist_details['wikipedia'] or artist_details['openai'] or artist_name
 
         song_details = music_client.get_song_data(artist_name, song_name)
-        song_details = song_details['lastfm'] or song_name
+        song_details = song_details['lastfm'] or song_details['openai'] or song_name
 
         band_details = music_client.get_band_data(artist_name)['open_ai']
 
