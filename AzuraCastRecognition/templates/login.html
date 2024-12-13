@@ -25,7 +25,10 @@
                 <div class="push text-center">Login with</div>
                 <div class="row push">
                     <div class="col-xs-12">
-                        <a href="javascript:void(0)" class="btn btn-effect-ripple btn-sm btn-primary btn-block"><i class="fa fa-twitter"></i> Twitter</a>
+                        <form action="/accounts/twitter/login/" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-effect-ripple btn-sm btn-primary btn-block"><i class="fa fa-twitter"></i> Twitter</button>
+                        </form>
                     </div>
                 </div>
                 <!-- END Social Login -->

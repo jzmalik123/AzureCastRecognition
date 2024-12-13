@@ -37,7 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'AzuraCastRecognition'
+    'AzuraCastRecognition',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.twitter_oauth2',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +53,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 ROOT_URLCONF = 'AzuraCastRecognition.urls'
 
@@ -124,3 +135,13 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+SOCIAL_AUTH_TWITTER_KEY = 'XtpWgK4PniIe5CjLzYc5oPvAS'
+SOCIAL_AUTH_TWITTER_SECRET = '9e8GZTscDPsgdajDZK7C83VFplyAcZUVrwteWuXZchEka136I0'
+
+SOCIAL_AUTH_TWITTER_REDIRECT_URI = 'complete/twitter/'
+SOCIALACCOUNT_STORE_TOKENS = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+
+
+
+LOGIN_REDIRECT_URL = '/'  # Replace with your desired URL
