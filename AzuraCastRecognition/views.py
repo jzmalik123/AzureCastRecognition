@@ -86,7 +86,7 @@ def post_tweet(request):
 
         load_dotenv()
 
-        # Initialize Tweepy API
+        # Initialize Tweepy v1.1 for media upload
         auth = tweepy.OAuth1UserHandler(
             consumer_key=os.getenv("CONSUMER_KEY"),
             consumer_secret=os.getenv("CONSUMER_SECRET"),
@@ -94,6 +94,14 @@ def post_tweet(request):
             access_token_secret=access_token_secret
         )
         api = tweepy.API(auth)
+
+        # Initialize Tweepy v2.0 for posting tweets
+        client = tweepy.Client(
+            consumer_key=os.getenv("CONSUMER_KEY"),
+            consumer_secret=os.getenv("CONSUMER_SECRET"),
+            access_token=access_token,
+            access_token_secret=access_token_secret
+        )
 
         # Upload image if provided
         error = False
@@ -107,7 +115,7 @@ def post_tweet(request):
                     for chunk in image_response.iter_content(chunk_size=1024):
                         img_file.write(chunk)
 
-                # Upload the image to Twitter
+                # Upload the image using Twitter API v1.1
                 media = api.media_upload(filename="temp_image.jpg")
                 media_id = media.media_id_string
             except requests.exceptions.RequestException as e:
@@ -117,14 +125,14 @@ def post_tweet(request):
                 print(f"Error uploading image to Twitter: {e}")
                 error = True
 
-        # Post the tweet with or without media
+        # Post the tweet using Twitter API v2.0
         try:
             if media_id:
-                tweet = api.update_status(status=summarized_tweet, media_ids=[media_id])
+                response = client.create_tweet(text=summarized_tweet, media_ids=[media_id])
             else:
-                tweet = api.update_status(status=summarized_tweet)
+                response = client.create_tweet(text=summarized_tweet)
 
-            tweet_url = f"https://twitter.com/{request.user.username}/status/{tweet.id}"
+            tweet_url = f"https://twitter.com/{request.user.username}/status/{response.data['id']}"
         except Exception as e:
             print(e)
             error = True
