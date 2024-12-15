@@ -36,10 +36,13 @@ def song_detection():
     band_details = music_client.get_band_data(artist_name)
     band_details = band_details['open_ai']
 
+    album_art_url = music_client.get_song_art_url(song_name, artist_name)
+
     context = {
         "song_details" : song_details,
         "artist_details" : artist_details,
-        "band_details" : band_details
+        "band_details" : band_details,
+        "album_art_url": album_art_url
     }
 
     return context
@@ -59,16 +62,21 @@ def preview_tweet(request, type):
         context = {
             "song_details": request.POST['song-details'],
             "artist_details": request.POST['artist-details'],
-            "band_details": request.POST['band-details']
+            "band_details": request.POST['band-details'],
+            "album_art_url": request.POST['album-art-url']
         }
     else:
         context = song_detection()
     summarized_tweet = OpenAIClient().summarize_for_tweet(context)
-    return render(request, 'preview_tweet.html', { "summarized_tweet": summarized_tweet })
+    return render(request, 'preview_tweet.html', { "summarized_tweet": summarized_tweet, "album_art_url": context["album_art_url"]})
+
 
 def post_tweet(request):
     if request.method == "POST":
         summarized_tweet = request.POST["tweet-field"]
+        image_url = request.POST.get("album_art_url", None)  # Image URL passed from form (optional)
+
+        # Get user's Twitter social account tokens
         social_account = request.user.socialaccount_set.filter(provider='twitter').first()
         if not social_account:
             raise Exception("User is not connected to Twitter")
@@ -77,24 +85,62 @@ def post_tweet(request):
         access_token_secret = social_account.socialtoken_set.first().token_secret
 
         load_dotenv()
-        # Initialize Tweepy client
-        client = tweepy.Client(
+
+        # Initialize Tweepy API
+        auth = tweepy.OAuth1UserHandler(
             consumer_key=os.getenv("CONSUMER_KEY"),
             consumer_secret=os.getenv("CONSUMER_SECRET"),
             access_token=access_token,
             access_token_secret=access_token_secret
         )
+        api = tweepy.API(auth)
 
-        # Post tweet
-        #response = client.create_tweet(text=summarized_tweet)
-        #tweet_url = f"https://twitter.com/{request.user.username}/status/{response.data['id']}"
-        tweet_url= "https://x.com/ImranKhanPTI/status/1867478105574588834"
-        api_url = f"https://publish.twitter.com/oembed?url={tweet_url}"
+        # Upload image if provided
+        error = False
+        media_id = None
+        if image_url:
+            try:
+                # Download the image from the URL
+                image_response = requests.get(image_url, stream=True)
+                image_response.raise_for_status()
+                with open("temp_image.jpg", "wb") as img_file:
+                    for chunk in image_response.iter_content(chunk_size=1024):
+                        img_file.write(chunk)
+
+                # Upload the image to Twitter
+                media = api.media_upload(filename="temp_image.jpg")
+                media_id = media.media_id_string
+            except requests.exceptions.RequestException as e:
+                print(f"Error downloading image: {e}")
+                error = True
+            except Exception as e:
+                print(f"Error uploading image to Twitter: {e}")
+                error = True
+
+        # Post the tweet with or without media
         try:
-            response = requests.get(api_url)
-            response.raise_for_status()
-            embed_html = response.json().get("html", "")
-        except requests.exceptions.RequestException as e:
-            embed_html = f"<p>Error loading tweet: {e}</p>"
+            if media_id:
+                tweet = api.update_status(status=summarized_tweet, media_ids=[media_id])
+            else:
+                tweet = api.update_status(status=summarized_tweet)
 
-        return render(request, "show_tweet.html", {"embed_html": embed_html, "tweet_url": tweet_url})
+            tweet_url = f"https://twitter.com/{request.user.username}/status/{tweet.id}"
+        except Exception as e:
+            print(e)
+            error = True
+
+        # Fetch the oEmbed HTML to embed the tweet
+        if not error:
+            api_url = f"https://publish.twitter.com/oembed?url={tweet_url}"
+            try:
+                embed_response = requests.get(api_url)
+                embed_response.raise_for_status()
+                embed_html = embed_response.json().get("html", "")
+            except requests.exceptions.RequestException as e:
+                error = True
+                embed_html = f"<p>Error loading tweet: {e}</p>"
+        else:
+            embed_html = None
+            tweet_url = None
+
+        return render(request, "show_tweet.html", {"embed_html": embed_html, "tweet_url": tweet_url, "error": error})

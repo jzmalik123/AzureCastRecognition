@@ -143,6 +143,16 @@
                                                           rows="7" class="form-control" placeholder="Description..">{{ band_details }}</textarea>
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label"
+                                               for="example-textarea-input">Post Image: <img style="margin-left:180px; " src="{{ album_art_url }}"></label>
+                                        <div class="col-md-9">
+                                            <input type="checkbox" name="album-art" checked="checked">
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="album-art-url" value="{{ album_art_url }}">
                                     <div class="form-group text-center">
                                         <button type="submit" value="Submit" class="btn-primary">Submit</button>
                                     </div>

@@ -115,6 +115,7 @@
                         <!-- Blockquotes -->
                         <div class="row">
                             <div class="col-md-6">
+                                {% if not error %}
                                 <div class="alert alert-success alert-dismissable">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <p>Your tweet has been posted successfully</p>
@@ -136,6 +137,11 @@
                                     <a href="{{ tweet_url }}" class="btn btn-primary"><i class="fa fa-twitter"></i> View Now</a>
                                 </div>
                                 <!-- END Blockquote Left Block -->
+                                {% else %}
+                                <div class="alert alert-danger alert-dismissable">
+                                    <p>Tweet not posted, Please contact admin</p>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- END Blockquotes -->

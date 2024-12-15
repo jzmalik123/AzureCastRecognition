@@ -37,3 +37,36 @@ class MusicInfoClient:
         return {
             "open_ai": open_ai_data
         }
+
+    def get_song_art_url(self, song_name, artist_name=None):
+        """
+        Fetch artwork URL for a song. Prioritizes album artwork, falls back to artist image.
+
+        :param song_name: The name of the song.
+        :param artist_name: The name of the artist (optional but recommended for better accuracy).
+        :return: A string with the image URL or None if no image is available.
+        """
+        album_artwork = None
+        artist_image = None
+
+        # Step 1: Fetch song metadata to get album artwork
+        try:
+            song_info = (
+                self.lastfm_client.get_song_info(artist_name, song_name)
+                if artist_name
+                else self.lastfm_client.get_song_info(song_name)
+            )
+            album_artwork = song_info.get('track', {}).get('album', {}).get('image', [{}])[-1].get('#text', None)
+        except Exception as e:
+            print(f"Error fetching song metadata from Last.fm: {e}")
+
+        # Step 2: Fetch artist image if album artwork is unavailable
+        if not album_artwork:
+            try:
+                artist_info = self.lastfm_client.get_artist_info(artist_name)
+                artist_image = artist_info.get('artist', {}).get('image', [{}])[-1].get('#text', None)
+            except Exception as e:
+                print(f"Error fetching artist metadata from Last.fm: {e}")
+
+        # Return album artwork if available, otherwise artist image
+        return album_artwork or artist_image

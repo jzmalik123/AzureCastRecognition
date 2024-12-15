@@ -150,6 +150,15 @@
                                                 </div>
                                                 <!-- END Blockquotes -->
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p>Attached Image:</p>
+                                                    <img src="{{ album_art_url }}">
+                                                    {% if album_art_url %}
+                                                        <input type="hidden" name="album_art_url" value="{{ album_art_url }}">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </fieldset>
