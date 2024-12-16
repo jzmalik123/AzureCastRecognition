@@ -51,6 +51,7 @@ class AzuraCastClient:
         parsed_response = []
         for station in response:
             now_playing = station.get('now_playing', {})
+            playing_next = station.get('playing_next', {})
             parsed_response.append({
                 "station_name": station.get('station', {}).get('name', 'Unknown Station'),
                 "song_id": now_playing.get('song', {}).get('id', ''),
@@ -61,6 +62,7 @@ class AzuraCastClient:
                 "duration": now_playing.get('duration', 0),
                 "elapsed": now_playing.get('elapsed', 0),
                 "remaining": now_playing.get('remaining', 0),
-                "playlist": now_playing.get('playlist', '')
+                "playlist": now_playing.get('playlist', ''),
+                "playing_next": playing_next.get('song', {}).get('text', '')
             })
         return parsed_response[0]

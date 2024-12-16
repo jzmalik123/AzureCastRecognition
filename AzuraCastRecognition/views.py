@@ -16,7 +16,10 @@ def home(request):
         return redirect(reverse("login"))
     social_account = request.user.socialaccount_set.filter(provider='twitter').first()
     image_url = social_account.extra_data["profile_image_url"]
-    return render(request, 'home.html', {"username":request.user.username, "image_url":image_url})
+    song_data = AzuraCastClient().now_playing()
+    now_playing = song_data['title']
+    playing_next = song_data['playing_next']
+    return render(request, 'home.html', {"username":request.user.username, "image_url":image_url, "now_playing": now_playing, "playing_next": playing_next})
 
 def login(request):
     return render(request, 'login.html')
